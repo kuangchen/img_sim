@@ -1,0 +1,26 @@
+#ifndef _ZEMAX_PSF_IMAGE_ARRAY_H
+#define _ZEMAX_PSF_IMAGE_ARRAY_H
+
+#include <string>
+#include <include/zemax_psf_image.h>
+#include <include/rect_grid.h>
+#include <memory>
+
+using std::string;
+using std::shared_ptr;
+
+namespace img_sim {
+
+  class zemax_psf_image_array : public rect_grid<shared_ptr<zemax_psf_image> > {
+  private:
+
+  public:
+    zemax_psf_image_array(const string &conf);
+    ~zemax_psf_image_array();
+
+  };
+
+  rect_grid_spec ex
+}
+
+#endif

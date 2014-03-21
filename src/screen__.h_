@@ -1,0 +1,35 @@
+#ifndef __SCREEN_H
+#define __SCREEN_H
+
+#include <vector>
+#include <string>
+#include <include/rect_grid.h>
+
+using namespace std;
+using namespace rect_grid;
+
+namespace img_sim {
+
+  class screen {
+  private:
+    vector<v2d> img_coord_list;
+    double z;
+    double x0, y0;
+    double dx, dy;
+    size_t nx, ny;
+
+  public:
+    screen(double z=0, double x0=0, double y0=0, double dx=0, double dy=0, size_t nx=0, size_t ny=0);
+    ~screen();
+    void init(const string& conf);
+
+    const vector<v2d> &get_img_coord_list() const;
+    size_t num_row() const;
+    size_t num_col() const;
+    
+  };
+
+}
+
+
+#endif

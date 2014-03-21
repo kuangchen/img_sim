@@ -1,0 +1,47 @@
+#include "zemax_psf_image_array.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+using namespace img_sim;
+
+zemax_psf_image_array::geometry zemax_psf_image_array::parse_geometry(const string &fname) {
+
+  zemax_psf_image_array::geometry g;
+
+  ifstream is(fname.c_str());
+  is >> g.x0[0] >> g.x0[1];
+  is >> g.dx[0] >> g.dx[1];
+  is >> g.sizes[0] >> g.sizes[1];
+
+  return g;
+}
+
+
+zemax_psf_image_array::zemax_psf_image_array(const string &fname) : 
+  basetype(zemax_psf_image_array::parse_geometry(fname)) {
+
+  ifstream is(fname.c_str());
+  
+  double temp;
+  for(int i=0; i<6; i++)
+    is >> temp;
+
+  string fn_pattern;
+  is >> fn_pattern;
+
+  char filename[100];
+  
+  for (size_t i=0; i<shape()[0]; i++)
+    for (size_t j=0; j<shape()[1]; j++) {
+      sprintf(filename, fn_pattern.c_str(), i, j);
+      (*this)[i][j] = new zemax_psf_image(filename);
+
+    }
+
+}
+ 
+zemax_psf_image_array::~zemax_psf_image_array() {
+  for_each(data(), data() + num_elements(), 
+	   [](zemax_psf_image* e) {if (e) delete e; } );
+}

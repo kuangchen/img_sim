@@ -1,0 +1,35 @@
+#include <src/zemax_psf_image.h>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+using namespace img_sim;
+
+zemax_psf_image::geometry zemax_psf_image::parse_geometry(const string &fname) {
+
+  zemax_psf_image::geometry g;
+
+  ifstream is(fname.c_str());
+  // cout << " fname = " << fname << "\n";
+  is >> g.x0[0] >> g.x0[1];
+  is >> g.dx[0] >> g.dx[1];
+  is >> g.sizes[0] >> g.sizes[1];
+  return g;
+}
+
+zemax_psf_image::zemax_psf_image(const string &fname) : 
+  grid_2d<double, double>(zemax_psf_image::parse_geometry(fname)) {
+
+  ifstream is(fname.c_str());
+
+  double temp;
+  for (int i=0; i<6; i++)
+    is >> temp;
+  
+  istream_iterator<double> begin(is), end;
+  assign(begin, end);
+
+  is.close();
+}
+
+
