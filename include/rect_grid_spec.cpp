@@ -36,11 +36,15 @@ rect_grid_spec rg::extract_spec(const string &fname, const string &prefix) {
   return s;
 }
 
-size_t rect_grid_spec::nearest_neighbor(double x) const {
+size_t rect_grid_spec::nn_index(double x) const {
   double nn = (x - orig) / delta;
   if (nn < 0 || nn > size-1)
     return outside_spec;
   
   else 
     return static_cast<size_t>(floor(nn));
+}
+
+bool rect_grid_spec::is_inside(double x) const { 
+  return (orig < x) && (x < orig + delta * size); 
 }

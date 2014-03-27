@@ -56,11 +56,16 @@ double psf::eval(const v3d& obj_coord, const v2d& img_coord) {
   new_obj_coord[0] = new_obj_coord_[0];
   new_obj_coord[1] = new_obj_coord_[2];
 
-  shared_ptr<zemax_psf_image> p = img_array.eval_nearest_neighbor(new_obj_coord);
-  if (p==NULL) 
+  if (!img_array.is_inside(new_obj_coord)) 
     return 0;
-  else 
-    return p->eval_nearest_neighbor(new_img_coord);
+
+  else {
+    const shared_ptr<zemax_psf_image> &p = img_array[new_obj_coord];
+    
+    if (p->is_inside(new_img_coord))
+      return (*p)[new_img_coord];
+  }
+
 
 
   // vector<double> wgt;

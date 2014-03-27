@@ -6,6 +6,7 @@
 #include <src/zemax_psf_image.h>
 #include <include/rect_grid.h>
 
+using std::shared_ptr;
 using std::string;
 using rg::rect_grid;
 

@@ -9,16 +9,13 @@
 #include <boost/multi_array.hpp>
 #include <iostream>
 
-using std::shared_ptr;
-using std::array;
-using boost::multi_array;
-using boost::extents;
-using std::vector;
-using std::numeric_limits;
-using std::cout;
-using rg::outside_spec;
+#define BOOST_DISABLE_ASSERTS
 
 namespace rg {
+  using boost::multi_array;
+  using boost::extents;
+  using namespace std;
+
   typedef array<size_t, 2> v2i;
   typedef array<double, 3> v3d;
   typedef array<double, 2> v2d;
@@ -43,8 +40,8 @@ namespace rg {
 
     rect_grid(const rect_grid_spec &row, const rect_grid_spec &col):
       row(row), col(col), 
-      raw_data(new multi_array<T, 2>(extents[row.size][col.size]))
-      {
+      raw_data(new multi_array<T, 2>(extents[row.size][col.size])) {
+
 	for (size_t i=0; i<row.size; i++)
 	  for (size_t j=0; j<col.size; j++) {
 	    coord_list.push_back({col.orig+col.delta*j, row.orig+row.delta*i});
@@ -64,13 +61,22 @@ namespace rg {
 
     const T& operator[] (const v2i &index) const {
       return (*raw_data)(index);
-      //return (*raw_data)[index[1]][index[0]];
     };
+
+    const T& operator[] (const v2d &coord) const {
+      v2i index = nn_index(coord);
+      return (*raw_data)(index);
+    }
     
     T& operator[] (const v2i &index) {
       return (*raw_data)(index);
-//      return (*raw_data)[index[1]][index[0]];
     };
+
+    T& operator[] (const v2d &coord) {
+      v2i index = nn_index(coord);
+      return (*raw_data)(index);
+    }
+    
     
     const vector<v2d>& get_coord_list() const {
       return coord_list;
@@ -90,12 +96,16 @@ namespace rg {
       return raw_data; 
     }
 
-    std::array<size_t, 2> nearest_neighbor(const v2d& coord) const {
+    inline bool is_inside(const v2d &coord) {
+      return row.is_inside(coord[1]) && col.is_inside(coord[0]);
+    }
+
+  public:
+    std::array<size_t, 2> nn_index(const v2d& coord) const {
       if (raw_data==false) 
 	return outside_boundary;
 
-      v2i nn = { row.nearest_neighbor(coord[1]), 
-		 col.nearest_neighbor(coord[0]) };
+      v2i nn = { row.nn_index(coord[1]), col.nn_index(coord[0]) };
 
       if (nn[0] == outside_spec || nn[1] == outside_spec)
 	return outside_boundary;
@@ -119,12 +129,12 @@ namespace rg {
       if (raw_data==false)
 	return T();
 
-      v2i nn_idx = nearest_neighbor(coord);
+      v2i nn_idx = nn_index(coord);
       if (nn_idx == outside_boundary) 
 	return T(0);
       
       else 
-	return (*this)[nearest_neighbor(coord)];
+	return (*this)[nn_idx];
     }
 
     

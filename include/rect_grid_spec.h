@@ -20,7 +20,9 @@ namespace rg {
     
   public:
     rect_grid_spec(double orig=0, double delta=0, size_t size=0, bool center=false);
-    size_t nearest_neighbor(double x) const;
+
+    bool is_inside(double x) const;
+    size_t nn_index(double x) const;
 
   } rect_grid_spec;
 

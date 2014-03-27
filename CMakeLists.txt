@@ -10,7 +10,6 @@ file(GLOB INCLUDE_FILE "include/*.cpp")
 add_executable(img_sim ${INCLUDE_FILE} ${SRC_FILE} main.cpp)
 
 
-find_package(CIMG)
 find_package(X11)
 find_package(Threads)
 find_package(Boost)

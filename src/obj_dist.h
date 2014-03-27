@@ -6,6 +6,7 @@
 #include <exception>
 #include <include/rect_grid.h>
 
+using std::vector;
 using rg::v3d;
 using std::string;
 using std::exception;
