@@ -1,12 +1,15 @@
 #ifndef __TYPES_H
-#define __TYPPE_H
+#define __TYPES_H
 
 #include <array>
 
-using namespace std;
+namespace rg {
 
-typedef std::array<double, 2> v2d;
-typedef std::array<double, 3> v3d;
+  using namespace std;
 
+  typedef std::array<double, 2> v2d;
+  typedef std::array<double, 3> v3d;
 
+  
+}
 #endif
